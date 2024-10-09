@@ -10,7 +10,7 @@ export default function Home() {
 
   // Timer logic to count down from 5 minutes
   useEffect(() => {
-    let interval = null;
+    let interval: NodeJS.Timeout | null = null;
     if (timerActive && countdown > 0) {
       interval = setInterval(() => {
         setCountdown((prev) => prev - 1);
@@ -19,13 +19,17 @@ export default function Home() {
       setTimerActive(false); // Reset after countdown
     }
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) {
+        clearInterval(interval); // Only clear interval if it's not null
+      }
+    };
   }, [countdown, timerActive]);
 
   // Handle button click
   const handleClick = () => {
     const randomChance = Math.random();
-    if (randomChance > 0.1) {
+    if (randomChance > 0.5) {
       // Success: Show "You win" message
       setMessage('You win! Click here to download YumeKey 3.');
       setToggle(true);
